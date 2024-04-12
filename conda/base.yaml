@@ -3,8 +3,9 @@ channels:
   - nodefaults
   - conda-forge
 dependencies:
-  - python 3.10.*
   - celery[redis]
+  - flower
+  - python 3.10.*
   - pip:
     - redis
     - pytest

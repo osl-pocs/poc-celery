@@ -13,7 +13,7 @@ logging.basicConfig(level=logging.INFO)
 @pytest.fixture(scope='module')
 def celery_config():
     """
-    Provides Celery app configuration for testing.
+    Provide Celery app configuration for testing.
 
     This fixture is responsible for setting up the Celery app with a specific
     configuration suitable for test runs. It defines the broker and result backend
@@ -34,7 +34,7 @@ def celery_config():
 @pytest.fixture(scope='module')
 def celery_enable_logging():
     """
-    Activates logging for Celery tasks during testing.
+    Activate logging for Celery tasks during testing.
 
     This fixture ensures that Celery task logs are visible during test execution,
     aiding in debugging and verifying task behavior.
@@ -48,7 +48,7 @@ def celery_enable_logging():
 
 def test_generate_collector_request():
     """
-    Validates that `generate_collector_request` produces a valid UUID string.
+    Validate that `generate_collector_request` produces a valid UUID string.
 
     Ensures the `generate_collector_request` function returns a string that
     is expected to be a UUID, confirming the generation of unique request identifiers.
@@ -65,7 +65,7 @@ def test_generate_collector_request():
 @patch('main.tasks.group')
 def test_collector_request_triggers_sub_collectors(mock_group, mock_collector_gathering_s):
     """
-    Tests the orchestration within `collector_request` to trigger subcollector tasks.
+    Test the orchestration within `collector_request` to trigger subcollector tasks.
 
     This test verifies that the `collector_request` function correctly sets up
     a group of subcollector tasks and designates `collector_gathering` as the callback

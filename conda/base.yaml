@@ -1,0 +1,12 @@
+name: celery-collectors
+channels:
+  - nodefaults
+  - conda-forge
+dependencies:
+  - python 3.10.*
+  - celery[redis]
+  - pip:
+    - redis
+    - pytest
+    - pytest-celery 
+    - factory_boy

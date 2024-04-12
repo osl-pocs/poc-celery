@@ -41,4 +41,4 @@ jobs:
       run: celery -A main.celery_app worker --loglevel=DEBUG
 
     - name: Run pytest
-      run: pytest main/tests/tests_tasks.py
+      run: pytest -vvv main/tests/tests_tasks.py

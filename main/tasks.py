@@ -8,7 +8,7 @@ from main.celery_app import app
 
 def generate_collector_request(topic: str) -> str:
     """
-    Generates a unique identifier for a collector request based on the given topic.
+    Generate a unique identifier for a collector request based on the given topic.
 
     Parameters
     ----------
@@ -25,6 +25,8 @@ def generate_collector_request(topic: str) -> str:
 @app.task
 def collector_request(topic: str):
     """
+    Generate a unique identifier for a collector request based on the given topic.
+
     Initiates the collection request by dispatching tasks to subcollectors
     and processes the aggregated results asynchronously using a chord.
 

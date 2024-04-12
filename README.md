@@ -1,8 +1,4 @@
-Below is a detailed and instructive `README.md` for your proof of concept (PoC) project using Celery with subcollectors, Redis, and Docker. This README includes sections on the project structure, workflow, purpose, and setup instructions.
-
----
-
-# PoC Celery with Subcollectors
+# Celery with Subcollectors
 
 ## Overview
 
@@ -92,7 +88,7 @@ This workflow demonstrates the power of Celery for handling complex asynchronous
 3. Activate the new environment:
 
    ```bash
-   mamba activate poc-celery
+   mamba activate celery-collectors
    ```
 
 ### Redis Setup Using Docker

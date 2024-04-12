@@ -1,4 +1,4 @@
-name: poc-celery
+name: celery-collectors
 channels:
   - nodefaults
   - conda-forge

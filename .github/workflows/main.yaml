@@ -33,12 +33,21 @@ jobs:
         use-mamba: true
         miniforge-variant: Mambaforge
 
+    - name: Prepare path
+      run: mkdir "data/"
+
+    - name: Run Rabbitmq container
+      run: docker run --name rabbitmq  -d --rm -p 5672:5672 rabbitmq
+
     - name: Run Redis container
-      run: |
-        docker run --name redis -d redis redis-server --save 60 1 --loglevel warning
+      run: docker run --name redis -d redis redis-server --save 60 1 --loglevel warning
 
     - name: Start Celery worker
       run: celery -A main.celery_app worker --loglevel=DEBUG &
 
-    - name: Run pytest
-      run: pytest -vvv main/tests/tests_tasks.py
+    - name: Run pytest for Collectors
+      run: pytest -vvv main/tests/tests_tasks_collectors.py
+
+
+    - name: Run pytest for Async tasks
+      run: pytest -vvv main/tests/tests_tasks_async.py

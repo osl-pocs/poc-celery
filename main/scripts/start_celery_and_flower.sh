@@ -1,22 +1,22 @@
 #!/bin/bash
 
-# Fetch the Redis IP address by directly invoking the get_redis_ip function
-REDIS_IP=$(python -c 'from main.scripts.get_container_ip import get_redis_ip; print(get_redis_ip())')
+# Fetch the Rabbitmq IP address by directly invoking the get_amqp_ip function
+AMQP_IP=$(python -c 'from main.scripts.get_container_ip import get_amqp_ip; print(get_amqp_ip())')
 
 # Validate the fetched IP
-if [ -z "$REDIS_IP" ]; then
-    echo "Failed to get Redis IP address."
+if [ -z "$AMQP_IP" ]; then
+    echo "Failed to get Rabbitmq IP address."
     exit 1
 fi
 
-echo "Redis IP: $REDIS_IP"
+echo "Rabbitmq IP: $AMQP_IP"
 
 # Start the Celery worker
 echo "Starting Celery worker..."
 celery -A main.celery_app worker --loglevel=INFO &
 
 # Start Flower
-echo "Starting Flower with Redis at $REDIS_IP..."
-celery -A main.celery_app flower --broker=redis://$REDIS_IP:6379/0 &
+echo "Starting Flower with Rabbitmq at $AMQP_IP..."
+celery -A main.celery_app flower --broker=amqp://guest:guest@{AMQP_IP}:5672 &
 
 echo "Celery and Flower have been started."

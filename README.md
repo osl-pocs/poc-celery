@@ -1,8 +1,12 @@
+Here's the improved README with an explanation of the provided test cases:
+
+---
+
 # Celery with Subcollectors
 
 ## Overview
 
-This proof of concept (PoC) demonstrates a distributed task queue implementation using Celery with Redis as the message broker. The project simulates a data collection and processing workflow using a system of subcollectors. Each subcollector generates a random list of integers for a given topic, and the results are aggregated, cleaned, and processed.
+This proof of concept (PoC) demonstrates a distributed task queue implementation using Celery with RabbitMQ as the message broker and Redis as the result backend. The project simulates a data collection and processing workflow using a system of subcollectors. Each subcollector generates a random list of integers for a given topic, and the results are aggregated, cleaned, and processed.
 
 ### Purpose
 
@@ -14,7 +18,7 @@ The primary goal of this PoC is to test and demonstrate the capability of Celery
 
 ## Project Structure
 
-- `celery_app.py`: Initializes the Celery app and includes the configuration for the Celery connection to Redis.
+- `celery_app.py`: Initializes the Celery app and includes the configuration for the Celery connection to RabbitMQ as the broker and Redis as the result backend.
 - `tasks.py`: Contains the definition of all Celery tasks, including subcollectors, data aggregation, cleanup, and processing tasks.
 - `tests/`: Directory containing test files to validate the functionality of the Celery tasks.
   - `test_tasks.py`: Implements tests for each Celery task using pytest.
@@ -85,21 +89,22 @@ This workflow demonstrates the power of Celery for handling complex asynchronous
    mamba activate celery-collectors
    ```
 
-### Redis Setup Using Docker
+### RabbitMQ and Redis Setup Using Docker
 
-Run a Redis container with the following command:
+Run RabbitMQ and Redis containers with the following commands:
 
 ```bash
-docker run --name redis -d redis redis-server --save 60 1 --loglevel warning
+docker run --name rabbitmq -d -p 5672:5672 rabbitmq
+docker run --name redis -d -p 6379:6379 redis
 ```
 
-This command starts a Redis server in a Docker container named `redis`, with data saving configured and log level set to `warning`.
+These commands start RabbitMQ and Redis servers in Docker containers named `rabbitmq` and `redis`, respectively.
 
 ## Monitoring Celery Tasks with Flower
 
 ### Using the Startup Script
 
-To facilitate an efficient development and monitoring environment, we've prepared a bash script `start_celery_and_flower.sh` that simultaneously starts a Celery worker and Flower, a real-time monitoring tool. This script fetches the Redis container's IP address dynamically, ensuring that both Celery and Flower are correctly configured to communicate with Redis as the broker.
+To facilitate an efficient development and monitoring environment, we've prepared a bash script `start_celery_and_flower.sh` that simultaneously starts a Celery worker and Flower, a real-time monitoring tool. This script fetches the RabbitMQ and Redis container IP addresses dynamically, ensuring that both Celery and Flower are correctly configured to communicate with RabbitMQ as the broker and Redis as the result backend.
 
 To start both the Celery worker and Flower, navigate to your project's root directory and run:
 
@@ -116,13 +121,33 @@ This command executes the script that:
 
 ### Executing the Tests with Pytest
 
-With your environment prepared and the celery launched, you can now run the tests using pytest. Navigate to the root directory of your project and execute:
+With your environment prepared and the Celery worker launched, you can now run the tests using pytest. Navigate to the root directory of your project and execute:
 
 ```bash
 pytest -vvv tests/
 ```
 
+### Explanation of Provided Test Cases
+
+The test cases aim to validate the behavior of various Celery tasks within the project, including both asynchronous tasks (`tasks_async.py`) and collectors tasks (`tasks_collectors.py`). Here's an overview of each test case:
+
+#### Asynchronous Tasks (`tasks_async.py`)
+
+1. **`test_clean_data`**: This test verifies that the `clean_data` task behaves correctly when called with a file path. It uses `mock_open` to simulate file I/O operations and ensures that the `open` function is not called, indicating that the task does not perform any file operations directly.
+
+2. **`test_create_project`**: This test validates the behavior of the `create_project` task by mocking file I/O operations and asserting that the task correctly writes data to the specified file path. It generates sample data rows and calls the task with each row, mocking the `open` function to capture the contents written to the file.
+
+3. **`test_create_project_stress`**: This asynchronous test case simulates a stress scenario by executing a large number of `create_project` tasks concurrently. It repeats a set of sample data rows multiple times to reach the desired number of task calls and then waits for a short duration to allow all tasks to complete. The test asserts `True` at the end to indicate successful execution.
+
+#### Collector Tasks (`tasks_collectors.py`)
+
+1. **`test_generate_collector_request`**: Validates that `generate_collector_request` produces a valid UUID string, confirming the generation of unique request identifiers.
+
+2. **`test_collector_request_triggers_sub_collectors`**: Verifies the orchestration within `collector_request` to trigger subcollector tasks. It mocks the `group` method and the signature of `collector_gathering` to intercept and assert their usage without actual task execution.
+
 - **Interpreting Results**: Pytest will provide a summary indicating which tests passed, failed, or were skipped. For any failures, detailed error information and traceback will be provided to aid in debugging.
+
+These test cases ensure that the Celery tasks perform as expected under different scenarios, including normal operation, stress testing, and error conditions. They help verify the correctness and robustness of the task implementations and provide confidence in the overall reliability of the Celery workflow.
 
 ## Best Practices in Asynchronous Task Management with Celery and Flower
 
@@ -130,7 +155,9 @@ pytest -vvv tests/
 
 In this project, we harness Celery's powerful asynchronous task execution to bolster performance and scalability. Here are some key best practices we've applied:
 
-- **Decoupling Components**: By employing Celery, we effectively decouple the task execution from the main application flow. This separation allows for more scalable and maintainable code architecture.
+- **Decoupling Components**: By employing Celery, we effectively decouple the
+
+ task execution from the main application flow. This separation allows for more scalable and maintainable code architecture.
 
 - **Optimizing Task Execution**: Utilizing Celery's `group`, `chain`, and `chord` primitives, we've structured complex task workflows that maximize concurrency and minimize processing time. This structured approach ensures tasks are executed in an optimal sequence and only after all required dependencies have been satisfied.
 
@@ -150,7 +177,7 @@ Flower is a critical tool for our project, providing comprehensive monitoring an
 
 ### Additional Practices
 
-- **Environment Isolation**: Utilizing virtual environments and containerization (e.g., Docker) for our Celery and Redis setup ensures consistency across development, testing, and production environments, reducing the "it works on my machine" syndrome.
+- **Environment Isolation**: Utilizing virtual environments and containerization (e.g., Docker) for our Celery and RabbitMQ/Redis setup ensures consistency across development, testing, and production environments, reducing the "it works on my machine" syndrome.
 
 - **Automated Testing**: Our project includes a suite of automated tests to validate task logic, asynchronous behavior, and failure handling scenarios. These tests, integrated into a CI/CD pipeline, ensure code quality and prevent regressions.
 
@@ -158,4 +185,4 @@ Flower is a critical tool for our project, providing comprehensive monitoring an
 
 ## Conclusion
 
-This PoC demonstrates a scalable and efficient way to manage distributed tasks using Celery with Redis as a message broker. It exemplifies a practical application of Celery's capabilities in handling complex workflows with multiple asynchronous tasks, showcasing a system that can be adapted for various data processing and aggregation needs.
+This PoC demonstrates a scalable and efficient way to manage distributed tasks using Celery with RabbitMQ as a message broker and Redis as the result backend. It exemplifies a practical application of Celery's capabilities in handling complex workflows with multiple asynchronous tasks, showcasing a system that can be adapted for various data processing and aggregati

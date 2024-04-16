@@ -51,18 +51,11 @@ def test_create_project(mock_file_io):
 
     mock.assert_has_calls(calls, any_order=True)
 
-
-@pytest.fixture(scope='module')
-def celery_worker():
-
-    worker = start_worker(app)
-    yield worker
-
 @pytest.mark.asyncio
-async def test_create_project_stress(celery_worker):
+async def test_create_project_stress(mock_file_io):
     file_path = str(DATA_DIR / "collectors.txt")
 
-    num_calls = 100
+    num_calls = 100000
 
     calls = [
         [1, 1, 3],

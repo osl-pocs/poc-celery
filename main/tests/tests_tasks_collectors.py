@@ -61,8 +61,8 @@ def test_generate_collector_request():
     request_id = generate_collector_request(topic)
     assert isinstance(request_id, str), "The request_id should be a string."
 
-@patch('main.tasks.collector_gathering.s')
-@patch('main.tasks.group')
+@patch('main.tasks_collectors.collector_gathering.s')
+@patch('main.tasks_collectors.group')
 def test_collector_request_triggers_sub_collectors(mock_group, mock_collector_gathering_s):
     """
     Test the orchestration within `collector_request` to trigger subcollector tasks.

@@ -8,6 +8,8 @@ dependencies:
   - python 3.10.*
   - pip:
     - rabbitmq
+    - redis
     - pytest
     - pytest-celery 
     - factory_boy
+    - pytest-asyncio

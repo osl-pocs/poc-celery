@@ -1,7 +1,7 @@
 import pytest
 from unittest.mock import patch
 from main.celery_app import app
-from main.tasks import (
+from main.tasks_collectors import (
     collector_request,
     generate_collector_request,
 )
@@ -17,7 +17,7 @@ def celery_config():
 
     This fixture is responsible for setting up the Celery app with a specific
     configuration suitable for test runs. It defines the broker and result backend
-    to use Redis and sets the task execution mode to always eager, which means
+    to use Rabbitmq and sets the task execution mode to always eager, which means
     tasks will be executed locally and synchronously.
 
     Yields
@@ -26,7 +26,7 @@ def celery_config():
         A dictionary containing configuration settings for the Celery application.
     """
     return {
-        'broker_url': 'redis://localhost:6379/0',
+        'broker_url': 'amqp://guest:guest@rabbitmq3:5672',
         'result_backend': 'redis://localhost:6379/0',
         'task_always_eager': True,
     }

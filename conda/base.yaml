@@ -3,11 +3,11 @@ channels:
   - nodefaults
   - conda-forge
 dependencies:
-  - celery[redis]
+  - celery
   - flower
   - python 3.10.*
   - pip:
-    - redis
+    - rabbitmq
     - pytest
     - pytest-celery 
     - factory_boy

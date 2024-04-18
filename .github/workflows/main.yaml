@@ -34,7 +34,7 @@ jobs:
         miniforge-variant: Mambaforge
 
     - name: Prepare path
-      run: mkdir "data/"
+      run: mkdir -p "data/"
 
     - name: Run Rabbitmq container
       run: docker run --name rabbitmq  -d --rm -p 5672:5672 rabbitmq

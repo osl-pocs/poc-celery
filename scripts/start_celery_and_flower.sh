@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Fetch the Rabbitmq IP address by directly invoking the get_amqp_ip function
-AMQP_IP=$(python -c 'from main.scripts.get_container_ip import get_amqp_ip; print(get_amqp_ip())')
+AMQP_IP=$(python -c 'from main.get_container_ip import get_amqp_ip; print(get_amqp_ip())')
 
 # Validate the fetched IP
 if [ -z "$AMQP_IP" ]; then

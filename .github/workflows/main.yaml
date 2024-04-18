@@ -8,12 +8,12 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 10
     strategy:
       matrix:
         python_version: ["3.10"]
     concurrency:
-      group: ci-${{ github.ref }}
+      group: ci-deploy-${{ github.ref }}
       cancel-in-progress: true
 
     defaults:
@@ -21,20 +21,19 @@ jobs:
         shell: bash -l {0}
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
 
-    - uses: conda-incubator/setup-miniconda@v2
+    - uses: conda-incubator/setup-miniconda@v3
       with:
         miniconda-version: "latest"
-        mamba-version: "*"
         environment-file: conda/base.yaml
         channels: conda-forge,nodefaults
-        activate-environment: celery-collectors
-        use-mamba: true
-        miniforge-variant: Mambaforge
+        activate-environment: poc-celery
+        auto-update-conda: true
+        conda-solver: libmamba
 
     - name: Prepare path
-      run: mkdir "data/"
+      run: mkdir -p "data/"
 
     - name: Run Rabbitmq container
       run: docker run --name rabbitmq  -d --rm -p 5672:5672 rabbitmq
@@ -46,8 +45,7 @@ jobs:
       run: celery -A main.celery_app worker --loglevel=DEBUG &
 
     - name: Run pytest for Collectors
-      run: pytest -vvv main/tests/tests_tasks_collectors.py
-
+      run: pytest -vvv test_tasks_collectors.py
 
     - name: Run pytest for Async tasks
-      run: pytest -vvv main/tests/tests_tasks_async.py
+      run: pytest -vvv test_tasks_async.py

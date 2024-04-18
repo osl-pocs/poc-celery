@@ -4,7 +4,7 @@ from pathlib import Path
 from main.celery_app import app
 
 # app = Celery('tasks', broker='your_broker_url', backend='your_backend_url')
-DATA_DIR = Path("data").absolute()
+DATA_DIR = Path(__file__).parent.parent / "data"
 
 @app.task
 def clean_data(file_path):

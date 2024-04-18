@@ -98,6 +98,12 @@ docker run --name rabbitmq -d -p 5672:5672 rabbitmq
 docker run --name redis -d -p 6379:6379 redis
 ```
 
+or
+
+```bash
+bash scripts/setup.sh
+```
+
 These commands start RabbitMQ and Redis servers in Docker containers named `rabbitmq` and `redis`, respectively.
 
 ## Monitoring Celery Tasks with Flower
@@ -109,13 +115,13 @@ To facilitate an efficient development and monitoring environment, we've prepare
 To start both the Celery worker and Flower, navigate to your project's root directory and run:
 
 ```bash
-bash main/scripts/start_celery_and_flower.sh
+bash scripts/setup.sh
 ```
 
 This command executes the script that:
 
 1. **Starts a Celery Worker**: Launches a Celery worker instance using `main.celery_app` as the application module. This worker listens for tasks dispatched to the queues and executes them as they arrive.
-   
+
 2. **Launches Flower**: Initiates Flower on the default port (5555), allowing you to access a web-based user interface to monitor and manage the Celery worker and tasks. Flower provides insights into task progress, worker status, task history, and much more, making it an invaluable tool for debugging and optimizing your task workflows.
 
 

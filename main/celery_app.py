@@ -1,7 +1,7 @@
 
 from celery import Celery
 
-from main.scripts.get_container_ip import get_amqp_ip, get_redis_ip
+from main.get_container_ip import get_amqp_ip, get_redis_ip
 
 # Get the Rabbitmq container IP address
 AMQP_IP = get_amqp_ip()

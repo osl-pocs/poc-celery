@@ -86,7 +86,7 @@ This workflow demonstrates the power of Celery for handling complex asynchronous
 3. Activate the new environment:
 
    ```bash
-   mamba activate celery-collectors
+   mamba activate poc-celery
    ```
 
 ### RabbitMQ and Redis Setup Using Docker

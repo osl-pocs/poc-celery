@@ -9,7 +9,7 @@ REDIS_IP = get_redis_ip()
 
 # Create a Celery instance with Rabbitmq as the broker and result backend
 app = Celery(
-    'celery-collectors',
+    'poc-celery',
     broker=f'amqp://guest:guest@{AMQP_IP}:5672',
     backend=f'redis://{REDIS_IP}:6379/0',
     include=[

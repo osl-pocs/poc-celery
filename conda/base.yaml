@@ -1,4 +1,4 @@
-name: celery-collectors
+name: poc-celery
 channels:
   - nodefaults
   - conda-forge
@@ -10,6 +10,6 @@ dependencies:
     - rabbitmq
     - redis
     - pytest
-    - pytest-celery 
+    - pytest-celery
     - factory_boy
     - pytest-asyncio

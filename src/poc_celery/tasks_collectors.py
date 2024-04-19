@@ -1,14 +1,14 @@
 import random
 import uuid
 
-from celery import group, chord
+from celery import chord, group
 
-from main.celery_app import app
+from poc_celery.celery_app import app
 
 
 def generate_collector_request(topic: str) -> str:
     """
-    Generate a unique identifier for a collector request based on the given topic.
+    Generate a unique identifier for a collector request.
 
     Parameters
     ----------
@@ -22,10 +22,11 @@ def generate_collector_request(topic: str) -> str:
     """
     return str(uuid.uuid4())
 
+
 @app.task
 def collector_request(topic: str):
     """
-    Generate a unique identifier for a collector request based on the given topic.
+    Generate a unique identifier for a collector request.
 
     Initiates the collection request by dispatching tasks to subcollectors
     and processes the aggregated results asynchronously using a chord.
@@ -40,16 +41,17 @@ def collector_request(topic: str):
     chord_tasks = group(
         collector_1.s(topic, request_id),
         collector_2.s(topic, request_id),
-        collector_3.s(topic, request_id)
+        collector_3.s(topic, request_id),
     )
     chord(chord_tasks)(callback)
+
 
 @app.task
 def collector_1(topic: str, request_id: str) -> list:
     """
     Generate a random list of integers for the given topic.
 
-    A subcollector task that generates a random list of integers for the given topic.
+    A subcollector task that generates a random list of integers.
 
     Parameters
     ----------
@@ -71,7 +73,7 @@ def collector_2(topic: str, request_id: str) -> None:
     """
     Processes the second subcollector task.
 
-    A subcollector task that generates a random list of integers for the given topic.
+    A subcollector task that generates a random list of integers.
 
     Parameters
     ----------
@@ -85,15 +87,18 @@ def collector_2(topic: str, request_id: str) -> None:
     list
         A list of random integers.
     """
-    random_list = [random.randint(0, 100) for _ in range(random.randint(0, 10))]
+    random_list = [
+        random.randint(0, 100) for _ in range(random.randint(0, 10))
+    ]
     collector_gathering.s(random_list, request_id).apply_async()
+
 
 @app.task
 def collector_3(topic: str, request_id: str) -> None:
     """
     Processes the third subcollector task.
 
-    A subcollector task that generates a random list of integers for the given topic.
+    A subcollector task that generates a random list of integers.
 
     Parameters
     ----------
@@ -107,15 +112,22 @@ def collector_3(topic: str, request_id: str) -> None:
     list
         A list of random integers.
     """
-    random_list = [random.randint(0, 100) for _ in range(random.randint(0, 10))]
+    random_list = [
+        random.randint(0, 100) for _ in range(random.randint(0, 10))
+    ]
     collector_gathering.s(random_list, request_id).apply_async()
+
 
 @app.task
 def collector_gathering(request_id: str, results: list):
     """
-    Aggregate the results from all subcollectors and proceeds with the cleanup process.
+    Join the process for collectors.
 
-    This task is intended to be used as a callback for a group of subcollector tasks.
+    Aggregate the results from all subcollectors and proceeds with the cleanup
+    process.
+
+    This task is intended to be used as a callback for a group of subcollector
+    tasks.
 
     Parameters
     ----------
@@ -127,6 +139,7 @@ def collector_gathering(request_id: str, results: list):
     """
     combined_result = [item for sublist in results for item in sublist]
     cleanup.delay(combined_result, request_id)
+
 
 @app.task
 def cleanup(data: list, request_id: str):
@@ -143,10 +156,13 @@ def cleanup(data: list, request_id: str):
     print(f"Cleanup: {request_id}, Size: {len(data)}")
     process.delay(data, request_id)
 
+
 @app.task
 def process(data: list, request_id: str):
     """
-    Processes the cleaned data, typically involving further analysis or storage.
+    Processes the cleaned data.
+
+    Typically involving further analysis or storage.
 
     Parameters
     ----------
@@ -162,4 +178,4 @@ def process(data: list, request_id: str):
     """
     item_count = len(data)
     print(f"Process: {request_id}, Total Items: {item_count}")
-    return {'request_id': request_id, 'item_count': item_count}
+    return {"request_id": request_id, "item_count": item_count}

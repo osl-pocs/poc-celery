@@ -1,10 +1,10 @@
-from celery import Celery, group
-from collections import defaultdict
 from pathlib import Path
-from main.celery_app import app
+
+from poc_celery.celery_app import app
 
 # app = Celery('tasks', broker='your_broker_url', backend='your_backend_url')
 DATA_DIR = Path(__file__).parent.parent / "data"
+
 
 @app.task
 def clean_data(file_path):
@@ -12,6 +12,7 @@ def clean_data(file_path):
     # Writing to file
     with open(file_path, "w") as f:
         f.write("")
+
 
 @app.task
 def create_project(row: list, file_path):

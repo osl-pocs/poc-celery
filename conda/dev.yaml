@@ -1,0 +1,21 @@
+name: poc-celery
+channels:
+  - nodefaults
+  - conda-forge
+dependencies:
+  - celery
+  - flower
+  - python 3.10.*
+  - pip:
+      - rabbitmq
+      - redis
+      - pytest
+      - pytest-celery
+      - factory_boy
+      - pytest-asyncio
+      - pre-commit
+      - ruff
+      - mypy
+      - vulture
+      - bandit
+      - mccabe

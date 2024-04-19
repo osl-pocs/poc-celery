@@ -1,0 +1,80 @@
+[project]
+name = "poc-celery"
+version = "0.1.0"  # semantic-release
+description = "Celery PoC"
+readme = "README.md"
+authors = ["Sandro Loch <esloch@gmail.com>"]
+license = "MIT"
+exclude = [
+  ".git/*",
+  ".env*",
+]
+packages = [
+  {include = "poc_celery", from="src"},
+]
+
+[tool.bandit]
+exclude_dirs = ["tests"]
+targets = "./"
+
+[tool.vulture]
+exclude = ["tests"]
+ignore_decorators = ["@abc.abstractmethod"]
+ignore_names = []
+make_whitelist = true
+min_confidence = 80
+paths = ["./"]
+sort_by_size = true
+verbose = false
+
+[tool.ruff]
+line-length = 79
+force-exclude = true
+src = ["./"]
+exclude = [
+  'docs',
+  'tests',
+]
+fix = true
+
+[tool.ruff.lint]
+ignore = ["PLR0913"]
+select = [
+  "E",   # pycodestyle
+  "F",   # pyflakes
+  # "D",   # pydocstyle
+  "YTT", # flake8-2020
+  "PL",  # PL
+  "RUF", # Ruff-specific rules
+  "I001", # isort
+]
+
+[tool.ruff.lint.pydocstyle]
+convention = "numpy"
+
+[tool.ruff.lint.isort]
+# Use a single line between direct and from import
+lines-between-types = 1
+
+[tool.ruff.format]
+quote-style = "double"
+
+[tool.mypy]
+python_version = "3.8"
+check_untyped_defs = true
+strict = true
+ignore_missing_imports = true
+warn_unused_ignores = true
+warn_redundant_casts = true
+warn_unused_configs = true
+exclude = [
+  'tests',
+  # excluded for now, otherwise it would take too much time to fix that
+  'src/poc_celery',
+]
+
+[[tool.mypy.overrides]]
+module = [
+  "yaml",
+]
+ignore_missing_imports = true

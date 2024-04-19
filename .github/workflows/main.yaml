@@ -1,19 +1,19 @@
 name: main
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
-  deploy:
+  tests:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     strategy:
       matrix:
         python_version: ["3.10"]
     concurrency:
-      group: ci-deploy-${{ github.ref }}
+      group: ci-tests-${{ github.ref }}
       cancel-in-progress: true
 
     defaults:
@@ -21,31 +21,39 @@ jobs:
         shell: bash -l {0}
 
     steps:
-    - uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
-    - uses: conda-incubator/setup-miniconda@v3
-      with:
-        miniconda-version: "latest"
-        environment-file: conda/base.yaml
-        channels: conda-forge,nodefaults
-        activate-environment: poc-celery
-        auto-update-conda: true
-        conda-solver: libmamba
+      - uses: conda-incubator/setup-miniconda@v3
+        with:
+          miniconda-version: "latest"
+          environment-file: conda/dev.yaml
+          channels: conda-forge,nodefaults
+          activate-environment: poc-celery
+          auto-update-conda: true
+          conda-solver: libmamba
 
-    - name: Prepare path
-      run: mkdir -p "data/"
+      - name: Install
+        run: pip install .
 
-    - name: Run Rabbitmq container
-      run: docker run --name rabbitmq  -d --rm -p 5672:5672 rabbitmq
+      - name: Prepare path
+        run: mkdir -p "data/"
 
-    - name: Run Redis container
-      run: docker run --name redis -d redis redis-server --save 60 1 --loglevel warning
+      - name: Run Rabbitmq container
+        run: docker run --name rabbitmq  -d --rm -p 5672:5672 rabbitmq
 
-    - name: Start Celery worker
-      run: celery -A main.celery_app worker --loglevel=DEBUG &
+      - name: Run Redis container
+        run: docker run --name redis -d redis redis-server --save 60 1 --loglevel warning
 
-    - name: Run pytest for Collectors
-      run: pytest -vvv test_tasks_collectors.py
+      - name: Start Celery worker
+        run: celery -A poc_celery.celery_app worker --loglevel=DEBUG &
 
-    - name: Run pytest for Async tasks
-      run: pytest -vvv test_tasks_async.py
+      - name: Run pytest for Collectors
+        run: pytest -vvv tests/test_tasks_collectors.py
+
+      - name: Run pytest for Async tasks
+        run: pytest -vvv tests/test_tasks_async.py
+
+      - name: Run linter
+        run: |
+          pre-commit install
+          pre-commit run --all-files

@@ -3,15 +3,11 @@ name = "poc-celery"
 version = "0.1.0"  # semantic-release
 description = "Celery PoC"
 readme = "README.md"
-authors = ["Sandro Loch <esloch@gmail.com>"]
-license = "MIT"
-exclude = [
-  ".git/*",
-  ".env*",
+authors = [
+  {name = "Sandro Loch", email = "esloch@gmail.com"}
 ]
-packages = [
-  {include = "poc_celery", from="src"},
-]
+license = {text = "MIT License"}
+requires-python = ">=3.8"
 
 [tool.bandit]
 exclude_dirs = ["tests"]

@@ -6,14 +6,14 @@ on:
     branches: [main]
 
 jobs:
-  deploy:
+  tests:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     strategy:
       matrix:
         python_version: ["3.10"]
     concurrency:
-      group: ci-deploy-${{ github.ref }}
+      group: ci-tests-${{ github.ref }}
       cancel-in-progress: true
 
     defaults:

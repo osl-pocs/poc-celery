@@ -48,10 +48,10 @@ jobs:
         run: celery -A poc_celery.celery_app worker --loglevel=DEBUG &
 
       - name: Run pytest for Collectors
-        run: pytest -vvv test_tasks_collectors.py
+        run: pytest -vvv tests/test_tasks_collectors.py
 
       - name: Run pytest for Async tasks
-        run: pytest -vvv test_tasks_async.py
+        run: pytest -vvv tests/test_tasks_async.py
 
       - name: Run linter
         run: |

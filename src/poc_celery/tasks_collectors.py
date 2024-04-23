@@ -3,7 +3,7 @@ import uuid
 
 from celery import chord, group
 
-from poc_celery.celery_app import app
+from src.poc_celery.celery_app import app
 
 
 def generate_collector_request(topic: str) -> str:

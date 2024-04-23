@@ -1,6 +1,6 @@
 from celery import Celery
 
-from poc_celery.get_container_ip import get_amqp_ip, get_redis_ip
+from src.poc_celery.get_container_ip import get_amqp_ip, get_redis_ip
 
 # Get the Rabbitmq container IP address
 AMQP_IP = get_amqp_ip()
@@ -12,8 +12,8 @@ app = Celery(
     broker=f"amqp://guest:guest@{AMQP_IP}:5672",
     backend=f"redis://{REDIS_IP}:6379/0",
     include=[
-        "poc_celery.tasks_async",
-        "poc_celery.tasks_collectors",
+        "src.poc_celery.tasks_collectors",
+        "src.poc_celery.tasks_async",
     ],
 )
 

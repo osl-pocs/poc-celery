@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Function to wait for a service to be available on a specific port
+# Wait for a service to be available on a specific port
 wait_for_service() {
     local host=$1
     local port=$2
@@ -40,4 +40,4 @@ celery -A src.poc_celery.celery_app worker --loglevel=INFO &
 echo "Starting Flower for monitoring Celery..."
 celery -A src.poc_celery.celery_app flower &
 
-echo "Celery and Flower dashboard have been started."
+echo "Celery and Flower have been started."

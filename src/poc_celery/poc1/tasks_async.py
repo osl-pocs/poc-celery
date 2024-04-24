@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from poc_celery.celery_app import app
+from poc_celery.poc1.celery_app import app
 
 # app = Celery('tasks', broker='your_broker_url', backend='your_backend_url')
 DATA_DIR = Path(__file__).parent.parent / "data"

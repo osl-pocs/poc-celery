@@ -4,7 +4,7 @@ from unittest.mock import Mock, call, mock_open, patch
 
 import pytest
 
-from poc_celery.tasks_async import DATA_DIR, clean_data, create_project
+from poc_celery.poc1.tasks_async import DATA_DIR, clean_data, create_project
 
 
 @pytest.fixture

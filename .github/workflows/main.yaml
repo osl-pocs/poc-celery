@@ -12,8 +12,9 @@ jobs:
     strategy:
       matrix:
         python_version: ["3.10"]
+        poc_id: ["poc1", "poc2"]
     concurrency:
-      group: ci-tests-${{ github.ref }}
+      group: ci-tests-${{ matrix.poc_id }}-${{ github.ref }}
       cancel-in-progress: true
 
     defaults:
@@ -47,11 +48,8 @@ jobs:
       - name: Start Celery worker
         run: celery -A poc_celery.celery_app worker --loglevel=DEBUG &
 
-      - name: Run pytest for Collectors
-        run: pytest -vvv tests/test_tasks_collectors.py
-
-      - name: Run pytest for Async tasks
-        run: pytest -vvv tests/test_tasks_async.py
+      - name: Run pytest
+        run: pytest -vvv tests/${{ matrix.poc_id }}
 
       - name: Run linter
         run: |

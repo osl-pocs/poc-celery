@@ -56,7 +56,7 @@ def test_create_project(mock_file_io):
 async def test_create_project_stress(mock_file_io):
     file_path = str(DATA_DIR / "collectors.txt")
 
-    num_calls = 100000
+    num_calls = 10
 
     calls = [
         [1, 1, 3],

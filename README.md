@@ -165,8 +165,8 @@ bash scripts/setup.sh
 This command executes the script that:
 
 1. **Starts a Celery Worker**: Launches a Celery worker instance using
-   `poc_celery.celery_app` as the application module. This worker listens for
-   tasks dispatched to the queues and executes them as they arrive.
+   `poc_celery.poc1.celery_app` as the application module. This worker listens
+   for tasks dispatched to the queues and executes them as they arrive.
 
 2. **Launches Flower**: Initiates Flower on the default port (5555), allowing
    you to access a web-based user interface to monitor and manage the Celery

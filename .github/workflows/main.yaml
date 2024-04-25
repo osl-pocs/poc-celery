@@ -46,7 +46,7 @@ jobs:
         run: docker run --name redis -d redis redis-server --save 60 1 --loglevel warning
 
       - name: Start Celery worker
-        run: celery -A poc_celery.celery_app worker --loglevel=DEBUG &
+        run: celery -A poc_celery.${{ matrix.poc_id }}.celery_app worker --loglevel=DEBUG &
 
       - name: Run pytest
         run: pytest -vvv tests/${{ matrix.poc_id }}

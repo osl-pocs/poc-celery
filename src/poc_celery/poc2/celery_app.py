@@ -12,7 +12,7 @@ app = Celery(
     broker=f"amqp://guest:guest@{AMQP_IP}:5672",
     backend=f"redis://{REDIS_IP}:6379/0",
     include=[
-        "poc_celery.poc2.tasks_collectors",
+        "poc_celery.poc2.tasks",
     ],
 )
 

@@ -1,13 +1,9 @@
-[project]
+[tool.poetry]
 name = "poc-celery"
 version = "0.1.0"  # semantic-release
 description = "Celery PoC"
 readme = "README.md"
-authors = [
-  {name = "Sandro Loch", email = "esloch@gmail.com"}
-]
-license = {text = "MIT License"}
-requires-python = ">=3.8"
+authors = ["Ivan", "Sandro"]
 
 [tool.bandit]
 exclude_dirs = ["tests"]
@@ -19,7 +15,7 @@ ignore_decorators = ["@abc.abstractmethod"]
 ignore_names = []
 make_whitelist = true
 min_confidence = 80
-paths = ["./"]
+paths = ["./src"]
 sort_by_size = true
 verbose = false
 

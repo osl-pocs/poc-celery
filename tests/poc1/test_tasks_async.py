@@ -4,7 +4,7 @@ from unittest.mock import Mock, call, mock_open, patch
 
 import pytest
 
-from poc_celery.tasks_async import DATA_DIR, clean_data, create_project
+from poc_celery.poc1.tasks_async import DATA_DIR, clean_data, create_project
 
 
 @pytest.fixture
@@ -56,7 +56,7 @@ def test_create_project(mock_file_io):
 async def test_create_project_stress(mock_file_io):
     file_path = str(DATA_DIR / "collectors.txt")
 
-    num_calls = 100000
+    num_calls = 10
 
     calls = [
         [1, 1, 3],

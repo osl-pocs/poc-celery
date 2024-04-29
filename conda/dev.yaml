@@ -19,3 +19,4 @@ dependencies:
       - vulture
       - bandit
       - mccabe
+      - sqlalchemy

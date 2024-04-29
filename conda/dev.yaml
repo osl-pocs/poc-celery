@@ -5,6 +5,7 @@ channels:
 dependencies:
   - celery
   - flower
+  - poetry
   - python 3.10.*
   - pip:
       - rabbitmq
